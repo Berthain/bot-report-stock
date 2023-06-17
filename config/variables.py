@@ -12,3 +12,5 @@ LOCAL_DIR = os.getcwd()
 
 OUTPUT = LOCAL_DIR+STOCK_CSV
 
+CYAN_COLOR = '#8fcae7'
+
