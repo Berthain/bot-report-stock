@@ -68,3 +68,42 @@ def async_card():
     loop.run_until_complete(myTeamsMessage.send())
 
 
+def test_send_potential_action():
+    """
+        This sends a message with a potential action
+    """
+    #os.getenv("MS_TEAMS_WEBHOOK")
+    myTeamsMessage = pymsteams.connectorcard(WBC)
+    myTeamsMessage.text("This message should have four potential actions.")
+    myTeamsMessage.title("Action Message Title")
+
+    myTeamsPotentialAction1 = pymsteams.potentialaction(_name = "Add a comment")
+    myTeamsPotentialAction1.addInput("TextInput","comment","Add a comment",False)
+    myTeamsPotentialAction1.addAction("HttpPost","Add Comment","https://jsonplaceholder.typicode.com/posts")
+
+    myTeamsPotentialAction2 = pymsteams.potentialaction(_name = "Get Users")
+    myTeamsPotentialAction2.addInput("DateInput","dueDate","Enter due date")
+    myTeamsPotentialAction2.addAction("HttpPost","save","https://jsonplaceholder.typicode.com/posts")
+
+    myTeamsPotentialAction3 = pymsteams.potentialaction(_name = "Change Status")
+    myTeamsPotentialAction3.choices.addChoices("In progress","0")
+    myTeamsPotentialAction3.choices.addChoices("Active","1")
+    myTeamsPotentialAction3.addInput("MultichoiceInput","list","Select a status",False)
+    myTeamsPotentialAction3.addAction("HttpPost","Save","https://jsonplaceholder.typicode.com/posts")
+
+    myTeamsPotentialAction4 = pymsteams.potentialaction(_name = "Download pymsteams")
+    myTeamsPotentialAction4.addOpenURI("Links", [
+                                                    {
+                                                        "os": "default",
+                                                        "uri": "https://pypi.org/project/pymsteams/",
+                                                    },
+                                                ])
+
+    myTeamsMessage.addPotentialAction(myTeamsPotentialAction1)
+    myTeamsMessage.addPotentialAction(myTeamsPotentialAction2)
+    myTeamsMessage.addPotentialAction(myTeamsPotentialAction3)
+    myTeamsMessage.addPotentialAction(myTeamsPotentialAction4)
+    myTeamsMessage.summary("Message Summary")
+
+    myTeamsMessage.send()
+    assert isinstance(myTeamsMessage.last_http_response.status_code, int)

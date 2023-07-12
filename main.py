@@ -1,4 +1,5 @@
 from services.teams import *
+from modules.core import *
 
-send_cards()
-#async_card()
+if __name__ == '__main__':
+    run_app()
